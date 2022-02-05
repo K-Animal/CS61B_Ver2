@@ -137,7 +137,18 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        int k = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j ++) {
+                if (b.tile(i,j) == null) {
+                    System.out.println(b.tile(i,j));
+                    k = 1;
+                }
+            }
+        }
+        if (k == 1) {
+            return true;
+        }
         return false;
     }
 
@@ -147,7 +158,23 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        int k = 0;
+        int tileValue;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j ++) {
+                if (b.tile(i,j) == null) {
+                    tileValue = 0;
+                } else {
+                    tileValue = b.tile(i,j).value();
+                }
+                if (tileValue == MAX_PIECE) {
+                    k = 1;
+                }
+            }
+        }
+        if (k == 1) {
+            return true;
+        }
         return false;
     }
 
@@ -158,7 +185,30 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        int tileValue;
+        int sideTileValue;
+        int k = 0;
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        /** Checks whether a move exists to the right */
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                tileValue = b.tile(i,j).value();
+                if (j + 1 >= 4) {
+                    continue;
+                } else {
+                    sideTileValue = b.tile(i,j + 1).value();
+                    if (tileValue == sideTileValue) {
+                        k = 1;
+                    }
+                }
+            }
+        }
+
+        if (k == 1) {
+            return true;
+        }
         return false;
     }
 
