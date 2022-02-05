@@ -191,20 +191,22 @@ public class Model extends Observable {
         if (emptySpaceExists(b)) {
             return true;
         }
-        /** Checks whether a move exists to the right */
+        /** Checks whether a move exists to the top or bottom and
+         * returns true if it does. tile(int col, int row) */
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 tileValue = b.tile(i,j).value();
                 if (j + 1 >= 4) {
                     continue;
                 } else {
-                    sideTileValue = b.tile(i,j + 1).value();
+                    sideTileValue = b.tile(i,(j + 1)).value();
                     if (tileValue == sideTileValue) {
                         k = 1;
                     }
                 }
             }
         }
+
 
         if (k == 1) {
             return true;
