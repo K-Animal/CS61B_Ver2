@@ -206,7 +206,21 @@ public class Model extends Observable {
                 }
             }
         }
-
+        /** Checks whether a move exists to the left or right and
+         * returns true if it does. tile(int col, int row) */
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < 4; i++) {
+                tileValue = b.tile(i,j).value();
+                if (i + 1 >= 4) {
+                    continue;
+                } else {
+                    sideTileValue = b.tile((i + 1), j).value();
+                    if (tileValue == sideTileValue) {
+                        k = 1;
+                    }
+                }
+            }
+        }
 
         if (k == 1) {
             return true;
