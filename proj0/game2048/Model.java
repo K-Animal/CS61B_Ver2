@@ -111,35 +111,69 @@ public class Model extends Observable {
         changed = false;
 
         // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
+        //for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-//        for (int c = 0;  c< board.size(); c += 1) {
-//            for (int r = 0; r < board.size(); r += 1) {
-//                Tile t = board.tile(c, r);
-//                if (board.tile(c, r) != null) {
-//                    board.move(c, 3, t);
+
+        for(int column = 0; column < board.size(); column += 1) {
+            for (int row = 0; row < board.size(); row += 1) {
+                Tile t = board.tile(column, row);
+                /** if t == null then ignore everything and move forward */
+                if (t == null){
+                    continue;
+                }
+                /** If the only tile in the column then shift tile to top */
+                if (onlyTileInColumn(t)) {
+                    board.move(column, 3, t);
+                    changed = true;
+                    continue;
+                }
+                /** does the next bottom tile match the value of the top one? If
+                 * so then move the two together to the same spot. If not, move to
+                 * right below the top tile*/
+                
+
+
+            }
+        }
+//        for (int column = 0; column < board.size(); column += 1) {
+//            for (int row = 0; row < board.size(); row += 1) {
+//                Tile t = board.tile(column, row);
+//                if (board.tile(column, row) != null) {
+//                    board.move(column, 3, t);
 //                    changed = true;
 //                    score += 7;
 //                }
 //            }
 //        }
-        /** Helper function for grouping all tiles to the top */
-        for (int column = 0;  column < board.size(); column += 1) {
-            for (int row = 0; row < board.size(); row += 1) {
-                Tile t = board.tile(column, row);
-                if (board.tile(column, row) != null) {
-                
-                }
+        checkGameOver();
+        if (changed) {
+            setChanged();
+        }
+        return changed;
+    }
+    public boolean onlyTileInColumn(Tile t) {
+        // loop over the column to see if any other tiles exist
+        int columnTile = t.col();
+        int counter = 0;
+        for (int row = 0; row < board.size(); row++) {
+            if (board.tile(columnTile, row) != null) {
+                counter++;
             }
         }
+        if(counter != 1) {
+            return false;
+        }
+        return true;
+    }
+    public boolean doesValueMatchTopTile() {
+        /** Some new text here  */
+        return false;
+    }
+    public boolean doesValueMatchTopTiles() {
+        /** Some new text here  */
+        return false;
+    }
 
-                checkGameOver();
-                if (changed) {
-                    setChanged();
-                }
-                return changed;
-            }
-        }
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
