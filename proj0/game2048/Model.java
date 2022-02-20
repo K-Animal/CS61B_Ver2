@@ -114,8 +114,8 @@ public class Model extends Observable {
         //for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
-        for(int column = board.size() - 1; column >= 0; column--) {
-            for (int row = board.size() - 1; row >= 0; row--) {
+        for(int column = 0; column < board.size(); column += 1) {
+            for (int row = 0; row < board.size(); row += 1) {
                 Tile t = board.tile(column, row);
                 /** if t == null then ignore everything and move forward */
                 if (t == null){
@@ -125,71 +125,37 @@ public class Model extends Observable {
                 if (onlyTileInColumn(t)) {
                     board.move(column, 3, t);
                     changed = true;
-                    break;
+                    continue;
                 }
                 /** does the next bottom tile match the value of the top one? If
-                 * so, then move the two together to the same spot. If not, move to
+                 * so then move the two together to the same spot. If not, move to
                  * right below the top tile*/
-                if (doesTileBelowMatchTileAbove(t)) {
-                    Tile temp = getBottomTileLocation(t);
-                    locationToMoveTilesTo(temp);
-                    // Determine topmost null spot & move the two matching tiles there
-                    int topMostNullSpot;
-                    // if null spot above then shift both tile to said, otherwise
-                    // move bottom tile to top tile spot
+                
 
 
-                }
-                    // if match then move() both tiles to topmost null spot
-                    // ELSE
-                    // shift tile to topmost spot
             }
         }
+//        for (int column = 0; column < board.size(); column += 1) {
+//            for (int row = 0; row < board.size(); row += 1) {
+//                Tile t = board.tile(column, row);
+//                if (board.tile(column, row) != null) {
+//                    board.move(column, 3, t);
+//                    changed = true;
+//                    score += 7;
+//                }
+//            }
+//        }
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
     }
-    public boolean doesTileBelowMatchTileAbove(Tile t) {
-        // Know that t.row() - 1 is > 0 because multiple values exist
-        for(int row = t.row() - 1; row >= 0; row --) {
-            Tile temp = board.tile(t.col(), row);
-            if (temp == null) {
-                continue;
-            }
-            if (t.value() == temp.value()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public Tile getBottomTileLocation(Tile t) {
-        Tile temp = t;
-        for(int row = t.row() - 1; row >= 0; row --) {
-            temp = board.tile(t.col(), row);
-            if (temp == null) {
-                continue;
-            }
-            if (t.value() == temp.value()) {
-                break;
-            }
-        }
-        return temp;
-    }
-    public Tile locationToMoveTilesTo(Tile temp) {
-        // find top null location
-        for(int row = board.size() - 1; row >= 0; row --) {
-            if (board.tile(temp.col(), row) == null) {
-                return board.tile(temp.col(), row);
-            }
-        }
-    }
     public boolean onlyTileInColumn(Tile t) {
         // loop over the column to see if any other tiles exist
         int columnTile = t.col();
         int counter = 0;
-        for (int row = board.size() - 1; row >= 0; row--) {
+        for (int row = 0; row < board.size(); row++) {
             if (board.tile(columnTile, row) != null) {
                 counter++;
             }
@@ -199,7 +165,10 @@ public class Model extends Observable {
         }
         return true;
     }
-
+    public boolean doesValueMatchTopTile() {
+        /** Some new text here  */
+        return false;
+    }
     public boolean doesValueMatchTopTiles() {
         /** Some new text here  */
         return false;
