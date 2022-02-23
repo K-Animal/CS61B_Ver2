@@ -107,120 +107,80 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
-        boolean changed;
-        boolean reDraw = false;
-        changed = false;
+        boolean changed = false;
         boolean exist;
-        boolean topofwhereicanbe;
 
         // TODO: Modify this.board (and perhaps this.score) to account
         //for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        int top_most_null_row = -1;
+        int top_most_row_of_second_tile = -1;
+        int merged = 0;
+        boolean tiles_match = false;
 
         for(int column = 0; column < board.size(); column += 1) {
             for (int row = board.size() - 1; row >= 0; row--) {
                 Tile t = board.tile(column, row);
-                exist = doIExist(t);
-                
-                /** if tile doesn't exist then do nothing */
-                if (exist == false) {
-                    continue;
-                }
-                
-                /** if I exist am I at the top of where I can be? If not, move me up */
-                if (exist) {
-                    if (amIAtTheTopOfWhereICanBe(t)) {
-                        continue;
+                if (board.tile(column, row) != null) {
+                    top_most_null_row = topMostNullPoint(t);
+                    top_most_row_of_second_tile = secondTileLocation(t);
+                    //If a second tile exists does it match Tile t?
+                    if (top_most_row_of_second_tile > -1 && (t.value() == tile(t.col(), top_most_row_of_second_tile).value())) {
+                        tiles_match = true;
+                    }
+                    //If there is a null spot above then move tiles to said null spot
+                    if (top_most_null_row > t.col()) {
+                        board.move(column, top_most_null_row, t);
+                        changed = true;
+                        //If the tile below also matches the tile above then move it to the same spot as well
+                        if (tiles_match) {
+                            t.merge(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
+                            changed = true;
+                        }
                     } else {
-                        moveMeWhereICanBe(t);
+                        //If Tile t is already as high as it can go then leave it and check for a match
+                        //with the second tile
+                        if (tiles_match) {
+                            board.move(column, row, tile(column, top_most_row_of_second_tile));
+                            changed = true;
+                        }
                     }
                 }
+                tiles_match = false;
             }
         }
         checkGameOver();
-        changed = reDraw;
+
         if (changed) {
             setChanged();
         }
         return changed;
     }
-    /** loop over the column to see if any other tiles exist above me
-     * and if a tile does exist above me, do I match the value? */
-    public boolean amIAtTheTopOfWhereICanBe(Tile t) {
-        int TileColumn = t.col();
-        int counter = 0;
-        int top_tile_row, top_tile_value = -1;
-        int top_null_tile_row;
-        boolean top_tile_exists = false;
-        boolean top_null_tile_exists = false;
-        boolean does_bottom_tile_match_top = false;
-        boolean have_tiles_merged = false;
-        Tile sassy_tile = new Tile();
-
-        //Is the tile at the top row?
-        if (t.row() == board.size() - 1) {
-            return true;
-        }
-
-        //Find the topmost tile in the row, if it exists
-        for (int row = t.row() + 1; row < board.size(); row++) {
-            if (tile(t.col(), row) != null)
-            {
-                top_tile_row = row;
-                top_tile_value = tile(t.col(), top_tile_row).value();
-                top_tile_exists = true;
+    // If it exists, finds the topmost Null row and returns it
+    public int topMostNullPoint(Tile t) {
+        int top_most_null_row = -1;
+        for (int row = board.size() - 1; row >= 0; row--) {
+            if(tile(t.col(), row) == null) {
+                top_most_null_row = row;
                 break;
             }
         }
-
-        //Find the topmost null position
-        for (int row = t.row() + 1; row < board.size(); row++) {
-            if (tile(t.col(), row) == null)
-            {
-                top_null_tile_row = row;
-                top_null_tile_exists = true;
+        return top_most_null_row;
+    }
+    // If a second tile exists, returns the second Tile row
+    public int secondTileLocation(Tile t) {
+        int top_most_row_of_second_tile = -1;
+        if (t.row() - 1 < 0) {
+            return top_most_row_of_second_tile;
+        }
+        for (int row = t.row() - 1; row >= 0; row--) {
+            if (tile(t.col(), row) != null) {
+                top_most_row_of_second_tile = row;
                 break;
             }
         }
-
-        //Do the two tiles match? If so, COMBINE them
-        if (top_tile_exists){
-            if (t.value() == top_tile_value) {
-                have_tiles_merged = true;
-                // If both tiles exist, both match, and there is a null space above then move them
-                if (top_null_tile_exists) {
-                    board.move(t.col(), top_null_tile_row, t);
-                    board.move(t.col(), top_null_tile_row, tile(t.col(), top_tile_row);
-                } else { // If both tiles exist, both match, and there NO null space above them
-                    board.move(t.col(), top_tile_row, t);
-                }
-            }
-        } else { //Do the two tiles match? If not move up bottom tile to below op tile
-
-        }
-
-    public boolean doIExist(Tile t) {
-        if (t != null) {
-            return true;
-        }
-        return false;
+        return top_most_row_of_second_tile;
     }
-
-    public boolean onlyTileInColumn(Tile t) {
-        // loop over the column to see if any other tiles exist
-        int columnTile = t.col();
-        int counter = 0;
-        for (int row = 0; row < board.size(); row++) {
-            if (board.tile(columnTile, row) != null) {
-                counter++;
-            }
-        }
-        if(counter != 1) {
-            return false;
-        }
-        return true;
-    }
-
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
