@@ -107,48 +107,61 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
-        boolean changed = false;
-        boolean exist;
-
-        // TODO: Modify this.board (and perhaps this.score) to account
+                // TODO: Modify this.board (and perhaps this.score) to account
         //for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
         int top_most_null_row = -1;
         int top_most_row_of_second_tile = -1;
-        int merged = 0;
-        boolean tiles_match = false;
+        boolean has_not_moved = false;
+        boolean tiles_match = true;
+        boolean changed = false;
 
-        for(int column = 0; column < board.size(); column += 1) {
+        for(int column = 0; column < board.size(); column ++) {
             for (int row = board.size() - 1; row >= 0; row--) {
                 Tile t = board.tile(column, row);
                 if (board.tile(column, row) != null) {
+                    System.out.println("------------");
+                    System.out.println("Column: " + column + " " + "Row: " + row);
                     top_most_null_row = topMostNullPoint(t);
                     top_most_row_of_second_tile = secondTileLocation(t);
                     //If a second tile exists does it match Tile t?
+                    has_not_moved = true;
+                    tiles_match = false;
                     if (top_most_row_of_second_tile > -1 && (t.value() == tile(t.col(), top_most_row_of_second_tile).value())) {
                         tiles_match = true;
+                        System.out.println("Tile match is true");
                     }
                     //If there is a null spot above then move tiles to said null spot
-                    if (top_most_null_row > t.col()) {
-                        board.move(column, top_most_null_row, t);
-                        changed = true;
+                    if (top_most_null_row > t.row()) {
                         //If the tile below also matches the tile above then move it to the same spot as well
                         if (tiles_match) {
+                            System.out.println("Tile match and there is a null spot above Null spot position -> " + top_most_null_row);
                             t.merge(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
+                            has_not_moved = false;
                             changed = true;
                         }
-                    } else {
+                    } else if (tiles_match) {
                         //If Tile t is already as high as it can go then leave it and check for a match
                         //with the second tile
-                        if (tiles_match) {
-                            board.move(column, row, tile(column, top_most_row_of_second_tile));
-                            changed = true;
-                        }
+                        System.out.println("No null spot above but tiles match");
+                        board.move(column, row, tile(column, top_most_row_of_second_tile));
+                        has_not_moved = false;
+                        changed = true;
                     }
+                    if (top_most_null_row > t.row() && top_most_row_of_second_tile == -1) {
+                        System.out.println("Null row exists but no second tile does");
+                        board.move(column, top_most_null_row, t);
+                        has_not_moved = false;
+                        changed = true;
+                    }
+                    System.out.println("------------");
                 }
-                tiles_match = false;
             }
         }
+        if (has_not_moved == true) {
+            changed = true;
+        }
+        System.out.println("XXXXXXXXXXXXXXXXXXXXX");
         checkGameOver();
 
         if (changed) {
@@ -165,6 +178,7 @@ public class Model extends Observable {
                 break;
             }
         }
+        System.out.println("topMostNullSpot was called: " + top_most_null_row);
         return top_most_null_row;
     }
     // If a second tile exists, returns the second Tile row
@@ -179,6 +193,7 @@ public class Model extends Observable {
                 break;
             }
         }
+        System.out.println("secondTileLocation was called: " + top_most_row_of_second_tile);
         return top_most_row_of_second_tile;
     }
 
