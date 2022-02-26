@@ -125,7 +125,6 @@ public class Model extends Observable {
                     top_most_null_row = topMostNullPoint(t);
                     top_most_row_of_second_tile = secondTileLocation(t);
                     //If a second tile exists does it match Tile t?
-                    has_not_moved = true;
                     tiles_match = false;
                     if (top_most_row_of_second_tile > -1 && (t.value() == tile(t.col(), top_most_row_of_second_tile).value())) {
                         tiles_match = true;
@@ -137,30 +136,23 @@ public class Model extends Observable {
                         if (tiles_match) {
                             System.out.println("Tile match and there is a null spot above Null spot position -> " + top_most_null_row);
                             t.merge(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
-                            has_not_moved = false;
-                            changed = true;
                         }
                     } else if (tiles_match) {
                         //If Tile t is already as high as it can go then leave it and check for a match
                         //with the second tile
                         System.out.println("No null spot above but tiles match");
                         board.move(column, row, tile(column, top_most_row_of_second_tile));
-                        has_not_moved = false;
-                        changed = true;
                     }
                     if (top_most_null_row > t.row() && top_most_row_of_second_tile == -1) {
                         System.out.println("Null row exists but no second tile does");
                         board.move(column, top_most_null_row, t);
-                        has_not_moved = false;
-                        changed = true;
                     }
                     System.out.println("------------");
                 }
             }
         }
-        if (has_not_moved == true) {
-            changed = true;
-        }
+
+        changed = true;
         System.out.println("XXXXXXXXXXXXXXXXXXXXX");
         checkGameOver();
 
