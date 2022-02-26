@@ -136,12 +136,14 @@ public class Model extends Observable {
                         if (tiles_match) {
                             System.out.println("Tile match and there is a null spot above Null spot position -> " + top_most_null_row);
                             t.merge(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
+                            score = score + t.value()*2;
                         }
                     } else if (tiles_match) {
                         //If Tile t is already as high as it can go then leave it and check for a match
                         //with the second tile
                         System.out.println("No null spot above but tiles match");
                         board.move(column, row, tile(column, top_most_row_of_second_tile));
+                        score = score + t.value()*2;
                     }
                     if (top_most_null_row > t.row() && top_most_row_of_second_tile == -1) {
                         System.out.println("Null row exists but no second tile does");
