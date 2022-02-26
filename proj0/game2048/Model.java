@@ -116,6 +116,7 @@ public class Model extends Observable {
         boolean tiles_match = true;
         boolean changed = false;
 
+        board.setViewingPerspective(Side.NORTH);
         for(int column = 0; column < board.size(); column ++) {
             for (int row = board.size() - 1; row >= 0; row--) {
                 Tile t = board.tile(column, row);
@@ -135,7 +136,8 @@ public class Model extends Observable {
                         //If the tile below also matches the tile above then move it to the same spot as well
                         if (tiles_match) {
                             System.out.println("Tile match and there is a null spot above Null spot position -> " + top_most_null_row);
-                            t.merge(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
+                            board.move(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
+                            board.move(column, top_most_null_row, tile(t.col(), t.row()));
                             score = score + t.value()*2;
                         }
                     } else if (tiles_match) {
@@ -155,6 +157,7 @@ public class Model extends Observable {
         }
 
         changed = true;
+        board.setViewingPerspective(Side.NORTH);
         System.out.println("XXXXXXXXXXXXXXXXXXXXX");
         checkGameOver();
 
