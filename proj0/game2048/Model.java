@@ -112,7 +112,6 @@ public class Model extends Observable {
         // changed local variable to true.
         int top_most_null_row = -1;
         int top_most_row_of_second_tile = -1;
-        boolean has_not_moved = false;
         boolean tiles_match = true;
         boolean changed = false;
 
@@ -137,24 +136,26 @@ public class Model extends Observable {
                             System.out.println("Tile match and there is a null spot above Null spot position -> " + top_most_null_row);
                             board.move(column, top_most_null_row, tile(column, top_most_row_of_second_tile));
                             board.move(column, top_most_null_row, tile(column, row));
-                            score = score + tile(column, row).value()*2;
+                            score = score + tile(column, top_most_null_row).value();
+                            changed = true;
                         }
                     } else if (tiles_match) {
                         //If Tile t is already as high as it can go then leave it and check for a match
                         //with the second tile
                         System.out.println("No null spot above but tiles match");
                         board.move(column, row, tile(column, top_most_row_of_second_tile));
-                        score = score + tile(column, row).value()*2;
+                        score = score + tile(column, row).value();
+                        changed = true;
                     }
-                    if (top_most_null_row > row && top_most_row_of_second_tile == -1) {
-                        System.out.println("Null row exists but no second tile does");
+                    if (top_most_null_row > row && tiles_match == false) {
+                        System.out.println("Null row exists but tiles don't match");
                         board.move(column, top_most_null_row, tile(column, row));
+                        changed = true;
                     }
                     System.out.println("------------");
                 }
             }
         }
-        changed = true;
         board.setViewingPerspective(Side.NORTH);
         System.out.println("XXXXXXXXXXXXXXXXXXXXX");
         checkGameOver();
