@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
  * Created by hug.
  */
 public class TestBuggyAList {
-  // YOUR TESTS HERE
+    // YOUR TESTS HERE
     @Test
     public void testThreeAddThreeRemove() {
         BuggyAList<Integer> input = new BuggyAList();
@@ -57,10 +57,5 @@ public class TestBuggyAList {
                 assertEquals(expected, buggyValue);
             }
         }
-    }
-
-    @Test
-    public void testBuggyAList3() {
-
     }
 }
