@@ -1,27 +1,27 @@
 package deque;
 
 public class LinkedListDeque<ValueType> {
-    private class Test {
-
-    }
-        public int count;
         public LinkedListDeque prevItem;
         public ValueType value;
         public LinkedListDeque nextItem;
-    public LinkedListDeque (ValueType T) {
+    public LinkedListDeque () {
         this.prevItem = this;
-        this.value = T;
+        this.value = null;
         this.nextItem = this;
     }
+    public int count;
+
     public void addFirst(ValueType T) {
         // Adds the first item to the list continuously right after the sentinel node every time.
-        LinkedListDeque add = new LinkedListDeque(T);
+        LinkedListDeque add = new LinkedListDeque();
         if (count < 1) {
             this.nextItem = add;
             this.prevItem = add;
+            add.value = T;
             add.prevItem = this;
             add.nextItem = this;
         } else {
+            add.value = T;
             add.nextItem = this.nextItem;
             add.prevItem = this;
             this.nextItem.prevItem = add;
@@ -31,14 +31,16 @@ public class LinkedListDeque<ValueType> {
     }
     public void addLast(ValueType T) {
         // Adds an item to the last spot i the list
-        LinkedListDeque add = new LinkedListDeque(T);
+        LinkedListDeque add = new LinkedListDeque();
         if (count < 1) {
             this.nextItem = add;
             this.prevItem = add;
+            add.value = T;
             add.prevItem = this;
             add.nextItem = this;
         } else {
             // This changes from addFirst
+            add.value = T;
             add.nextItem = this;
             add.prevItem = this.prevItem;
             this.prevItem.nextItem = add;
@@ -57,7 +59,7 @@ public class LinkedListDeque<ValueType> {
     }
     public void printDeque() {
         // Print out the Deque from the first item to the last
-        LinkedListDeque stepper = new LinkedListDeque(null);
+        LinkedListDeque stepper = new LinkedListDeque();
         stepper.prevItem = null;
         stepper.nextItem = this.nextItem;
         while (stepper.nextItem != this) {
@@ -81,7 +83,7 @@ public class LinkedListDeque<ValueType> {
         if (count == 0) {
         return null;
     }
-        LinkedListDeque stepper = new LinkedListDeque(null);
+        LinkedListDeque stepper = new LinkedListDeque();
         stepper.prevItem = null;
         stepper.nextItem = this.prevItem.prevItem;
         ValueType lastValue = (ValueType) this.prevItem.value;
@@ -102,7 +104,7 @@ public class LinkedListDeque<ValueType> {
          if (index <= count / 2) {
             // Forward implementation
             int n = 1;
-            LinkedListDeque stepper = new LinkedListDeque(null);
+            LinkedListDeque stepper = new LinkedListDeque();
             stepper.prevItem = null;
             stepper.nextItem = this.nextItem;
             while (n < index) {
@@ -113,7 +115,7 @@ public class LinkedListDeque<ValueType> {
         }
         // Backward implementation
         int n = 1;
-        LinkedListDeque stepper = new LinkedListDeque(null);
+        LinkedListDeque stepper = new LinkedListDeque();
         stepper.nextItem = null;
         stepper.prevItem = this.prevItem;
         while (n <= count - index) {
@@ -132,4 +134,9 @@ public class LinkedListDeque<ValueType> {
 //         //After lecture 11
 //    }
 
+//    public static void main(String[] args){
+//        LinkedListDeque Sentinel = new LinkedListDeque("bob");
+//        Sentinel.addFirst("Tom");
+//
+//    }
 }
