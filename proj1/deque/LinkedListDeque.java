@@ -1,15 +1,15 @@
 package deque;
 
 public class LinkedListDeque<ValueType> {
-        public LinkedListDeque prevItem;
-        public ValueType value;
-        public LinkedListDeque nextItem;
-    public LinkedListDeque () {
+        private LinkedListDeque prevItem;
+        private ValueType value;
+        private LinkedListDeque nextItem;
+    public LinkedListDeque() {
         this.prevItem = this;
         this.value = null;
         this.nextItem = this;
     }
-    public int count;
+    private int count;
 
     public void addFirst(ValueType T) {
         // Adds the first item to the list continuously right after the sentinel node every time.
@@ -96,8 +96,6 @@ public class LinkedListDeque<ValueType> {
         return lastValue;
     }
     public ValueType get(int index) {
-        //TODO
-        // Try and do it at least a little smartly so you're working backwards or forwards on the list
          if (count == 0 || index == 0 || index > count) {
             return null;
         }
