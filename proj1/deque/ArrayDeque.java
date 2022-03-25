@@ -1,18 +1,18 @@
 package deque;
 
-public class ArrayDeque<ValueType> {
-    public ValueType[] array;
+public class ArrayDeque<T> {
+    public T[] array;
     public int count;
     private int positionFirst = 0;
     private int positionLast = 0;
     private int arraySize;
 
     public ArrayDeque() {
-        array = (ValueType[]) new Object[8];
+        array = (T[]) new Object[8];
         count = 0;
         arraySize = 8;
     }
-    public void addFirst(ValueType T) {
+    public void addFirst(T T) {
         if (array[positionFirst] != null) {
             positionFirst --;
             positionFirst = doesLoopBack(positionFirst);
@@ -20,7 +20,7 @@ public class ArrayDeque<ValueType> {
         array[positionFirst] = T;
         count ++;
     }
-    public void addLast(ValueType T) {
+    public void addLast(T T) {
         if (array[positionLast] != null) {
             positionLast ++;
         }
@@ -37,11 +37,11 @@ public class ArrayDeque<ValueType> {
     public int size() {
         return count;
     }
-    public ValueType removeFirst() {
+    public T removeFirst() {
         if (isEmpty() == true) {
             return null;
         }
-        ValueType temp = array[positionFirst];
+        T temp = array[positionFirst];
         array[positionFirst] = null;
         if (positionFirst == positionLast) {
             positionLast++;
@@ -52,11 +52,11 @@ public class ArrayDeque<ValueType> {
         count --;
         return temp;
     }
-    public ValueType removeLast() {
+    public T removeLast() {
         if (isEmpty() == true) {
             return null;
         }
-        ValueType temp = array[positionLast];
+        T temp = array[positionLast];
         array[positionLast] = null;
         if (positionLast == positionFirst) {
             positionFirst--;
@@ -78,8 +78,8 @@ public class ArrayDeque<ValueType> {
         }
         return position;
     }
-    public ValueType get(int index) {
-        ValueType temp = array[index];
+    public T get(int index) {
+        T temp = array[index];
         return temp;
     }
 //    private void createSmallerArray() {
