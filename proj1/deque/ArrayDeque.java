@@ -1,8 +1,8 @@
 package deque;
 
 public class ArrayDeque<T> {
-    public T[] array;
-    public int count;
+    private T[] array;
+    private int count;
     private int positionFirst = 0;
     private int positionLast = 0;
     private int arraySize;
@@ -81,6 +81,11 @@ public class ArrayDeque<T> {
     public T get(int index) {
         T temp = array[index];
         return temp;
+    }
+    public void printDeque() {
+        for (int i = 0; i < arraySize; i++) {
+            System.out.println(array[i]);
+        }
     }
 //    private void createSmallerArray() {
 //

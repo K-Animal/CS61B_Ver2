@@ -122,6 +122,15 @@ public class LinkedListDeque<T> {
         }
         return (T) stepper.prevItem.value;
     }
+    public T getRecursive(int index) {
+        if (this.value == null){
+            return null;
+        }
+        if (index == 0) {
+            return this.value;
+        }
+        return getRecursive(index - 1);
+    }
 
 //    public Iterator<T> iterator() {
 //        //TODO
