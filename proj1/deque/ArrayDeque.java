@@ -5,7 +5,7 @@ public class ArrayDeque<ValueType> {
     public int count;
     private int positionFirst = 0;
     private int positionLast = 0;
-    private int arraySize = 0;
+    private int arraySize;
 
     public ArrayDeque() {
         array = (ValueType[]) new Object[8];
@@ -14,29 +14,18 @@ public class ArrayDeque<ValueType> {
     }
     public void addFirst(ValueType T) {
         if (array[positionFirst] != null) {
-            if (positionFirst - 1 >= 0) {
-                positionFirst --;
-            } else {
-                positionFirst = arraySize - 1;
-            }
-        }
-
-        if (positionFirst - 1 >= -1) {
-            array[positionFirst] = T;
             positionFirst --;
-        } else {
-            positionFirst = arraySize - 1;
-            array[positionFirst] = T;
-            positionFirst --;
+            positionFirst = doesLoopBack(positionFirst);
         }
+        array[positionFirst] = T;
         count ++;
     }
     public void addLast(ValueType T) {
-        if (positionLast == arraySize && array[positionFirst] == null) {
-            positionLast = 0;
+        if (array[positionLast] != null) {
+            positionLast ++;
         }
+        positionLast = doesLoopBack(positionLast);
         array[positionLast] = T;
-        positionLast ++;
         count ++;
     }
     public boolean isEmpty() {
@@ -49,42 +38,50 @@ public class ArrayDeque<ValueType> {
         return count;
     }
     public ValueType removeFirst() {
-        // TODO BROKEN WHEN CYCLING BACK AROUND
-        // TODO Maybe it would be nice to have a setter function that performs all the required checks
-        if (array[positionFirst] != null) {
-            if (positionLast == positionFirst) {
-                positionLast ++;
-            }
-            ValueType temp = array[positionFirst];
-            array[positionFirst] = null;
-            positionFirst ++;
-            return temp;
+        if (isEmpty() == true) {
+            return null;
         }
-        if (positionFirst + 1 < arraySize) {
-            positionFirst ++;
-            if (positionFirst + 1 > positionLast) {
-                positionLast = positionFirst + 1;
-            }
-            ValueType temp = array[positionFirst];
-            array[positionFirst] = null;
-            return temp;
-        } else {
-            if (positionLast == 0) {
-                positionLast = 1;
-            }
-            positionFirst = 0;
-            ValueType temp = array[positionFirst];
-            array[positionFirst] = null;
-            return temp;
+        ValueType temp = array[positionFirst];
+        array[positionFirst] = null;
+        if (positionFirst == positionLast) {
+            positionLast++;
+            positionLast= doesLoopBack(positionLast);
         }
+        positionFirst ++;
+        positionFirst = doesLoopBack(positionFirst);
+        count --;
+        return temp;
     }
-//    public ValueType removeLast() {
-//
-//    }
-//    public ValueType get(int index) {
-//
-//    }
-//
+    public ValueType removeLast() {
+        if (isEmpty() == true) {
+            return null;
+        }
+        ValueType temp = array[positionLast];
+        array[positionLast] = null;
+        if (positionLast == positionFirst) {
+            positionFirst--;
+            positionFirst= doesLoopBack(positionFirst);
+        }
+        positionLast --;
+        positionLast = doesLoopBack(positionLast);
+        count --;
+        return temp;
+    }
+    private int doesLoopBack(int position) {
+        if (position > arraySize - 1) {
+            position = 0;
+            return position;
+        }
+        if (position < 0) {
+            position = arraySize - 1;
+            return position;
+        }
+        return position;
+    }
+    public ValueType get(int index) {
+        ValueType temp = array[index];
+        return temp;
+    }
 //    private void createSmallerArray() {
 //
 //    }
@@ -99,17 +96,16 @@ public class ArrayDeque<ValueType> {
 //        //TODO
 //         //After lecture 11
 //    }
-
-    public static void main(String[] args) {
-        ArrayDeque arrays = new ArrayDeque();
-        for (int i = 0; i < arrays.arraySize / 2; i++) {
-        arrays.addLast(i);
-        }
-        for (int i = arrays.arraySize / 2; i < arrays.arraySize; i++) {
-            arrays.addFirst(i);
-        }
-        for (int i = 0; i < arrays.arraySize; i++) {
-            arrays.removeFirst();
-        }
-    }
+//    public static void main(String[] args) {
+//        ArrayDeque arrays = new ArrayDeque();
+//        for (int i = 0; i < arrays.arraySize / 2 ; i++) {
+//        arrays.addLast(i);
+//        }
+//        for (int i = arrays.arraySize / 2; i < arrays.arraySize; i++) {
+//            arrays.addFirst(i);
+//        }
+//        for (int i = 0; i < arrays.arraySize; i++) {
+//            arrays.removeFirst();
+//        }
+//    }
 }
